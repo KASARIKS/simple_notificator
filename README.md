@@ -1,2 +1,2 @@
 # simple_notificator
-This is simple console notificator on pc
+This is a simple console notifieron pc
