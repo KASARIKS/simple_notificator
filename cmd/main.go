@@ -3,8 +3,11 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"os"
 	"time"
+
+	_ "modernc.org/sqlite"
 )
 
 type Events struct {
@@ -71,7 +74,7 @@ func InitDb() error {
 		}
 	}
 
-	return err
+	return nil
 }
 
 func Close() error {
@@ -79,7 +82,9 @@ func Close() error {
 }
 
 func main() {
-	InitDb()
+	if err := InitDb(); err != nil {
+		log.Fatal(err)
+	}
 
 	events := Events{
 		Events: []Event{
