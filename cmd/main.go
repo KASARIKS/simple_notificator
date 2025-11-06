@@ -1,7 +1,9 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
+	"os"
 	"time"
 )
 
@@ -39,7 +41,46 @@ type Event struct {
 	Date  time.Time
 }
 
+const schema = "CREATE TABLE events (" +
+	"id INTEGER PRIMARY KEY AUTOINCREMENT," +
+	"name TEXT NOT NULL," +
+	"place TEXT NOT NULL," +
+	"date TEXT NOT NULL" +
+	");"
+
+var db *sql.DB
+
+func InitDb() error {
+	dbFile := "events.db"
+
+	_, err := os.Stat(dbFile)
+
+	var install = false
+	if err != nil {
+		install = true
+	}
+
+	db, err = sql.Open("sqlite", dbFile)
+	if err != nil {
+		return err
+	}
+
+	if install {
+		if _, err := db.Exec(schema); err != nil {
+			return err
+		}
+	}
+
+	return err
+}
+
+func Close() error {
+	return db.Close()
+}
+
 func main() {
+	InitDb()
+
 	events := Events{
 		Events: []Event{
 			{
